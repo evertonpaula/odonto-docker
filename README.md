@@ -1,8 +1,10 @@
-Odonto Docker
+# Odonto Docker
 
+## Infra
 - PHP
 - MSQL
 - MAIL
 - NGNIX
 
-1. cd odonto-docker && bash docker-compose-up.sh
+## How to use
+    ```cd ./odonto-docker && bash docker-compose-up.sh```
