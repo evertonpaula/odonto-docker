@@ -1,0 +1,71 @@
+version: '2.0'
+services:
+    mail:
+        container_name: odonto-mail
+        image: schickling/mailcatcher:latest
+        networks:
+          odonto_net:
+            ipv4_address: 172.20.238.13
+        ports:
+          - "1080:1080"
+          - "1025:1025"
+    mysql:
+        container_name: odonto-mysql
+        image: mysql:latest
+        networks:
+          odonto_net:
+            ipv4_address: 172.20.238.12
+        ports:
+          - "3306:3306"
+        extra_hosts:
+            - "database.mysql:127.0.0.1"
+        environment:
+          MYSQL_ROOT_PASSWORD: root
+        volumes:
+            - ./data/mysql:/var/lib/mysql
+    php:
+        container_name: odonto-php7
+        build:
+            context: ./configs/php
+            dockerfile: Dockerfile
+        networks:
+            odonto_net:
+                ipv4_address: 172.20.238.11
+        depends_on:
+            - mysql
+        extra_hosts:
+            - "odonto.docs.lo:172.20.238.10"
+            - "odonto.panel.lo:172.20.238.10"
+            - "odonto.api.lo:172.20.238.10"
+            - "database.mysql:172.20.238.12"
+            - "odonto.mail.service:172.20.238.13"
+        volumes:
+            - .:/var/www/odonto
+    web:
+        container_name: odonto-nginx
+        image: nginx:latest
+        depends_on:
+            - php
+        networks:
+            odonto_net:
+                ipv4_address: 172.20.238.10
+        ports:
+            - "80:80"
+        volumes:
+            - .:/var/www/odonto
+            - ./configs/nginx/conf.d:/etc/nginx/conf.d
+        links:
+            - php
+        extra_hosts:
+            - "odonto.docs.lo:127.0.0.1"
+            - "odonto.api.lo:127.0.0.1"
+            - "odonto.panel.lo:127.0.0.1"
+            - "odonto.mail.service:127.0.0.1"
+networks:
+    odonto_net:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.20.238.0/24
+                  gateway: 172.20.238.1

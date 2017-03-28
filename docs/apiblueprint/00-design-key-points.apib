@@ -1,0 +1,38 @@
+FORMAT: 1A
+
+# Introduction
+This is a brief introduction of the several design key points of the odonto microservices.
+
+## Architecture
+Odonto has two microservices at the moment:
+   + General Api
+      - `Lumen 5.3.*` Api based
+      - `JWT Token` for authentication
+      - `Mysql` Database
+      - `AWS Drive` for storege imagem
+
+   + Panel
+      - `Angular2` framework
+      - `TypeScript` language devolupment
+      - `Angular-CLI` Client helper
+
+## Description Odonto API (Core)
+
++ `General Api` has all functions, firstly it's to identify and authorizer all accesses, and second it's a core api. Usually
+   - Intercepting routes to add data on requests for authorization and authentication
+   - Providing default responses to all routes,  something like this:
+      ```
+      {
+         message: '<message success || message error>',
+         data: <array|object|null>,
+         code: <200|500|404|422|...>
+      }
+      ```
+## Docs
+
++ Some routes needs a Bearer token, anothers routes just doesn't, so the next code example describes how is possible to knows which routes it needs and which doesn't need.
+   - Example:
+      + Request
+         + Headers
+            Authorization: <Bearer {token}>
+   - If the route didn't have this code example means that doesn't need a Bearer token.

@@ -1,0 +1,45 @@
+# Group Authentication
+API's collection of methods to Authentication.
+
+## Post Authentication [/v1/auth/login]
+User Authentication
+
+### Post Authentication [POST]
+
+**AVAILABLE PARAMETERS**
+Param    | Type     | Validation             | Description
+---------|----------|------------------------|-----------------------
+username | `string` | required,string|email  | Username (`email`)
+password | `string` | required,string        | Password (`asdfasdf`)
+
++ Response 200 (application/json)
+   {
+      message: '<success message>',
+      data: {
+         token: 'Bearer `token`'
+      },
+      code: 200
+   }
+
++ Response 401 (application/json)
+   {
+     message: '<error message>',
+     data: null,
+     code: 401
+   }
+
+## Post Logout [/v1/auth/logout]
+User Lagout
+
+### Post Logout [POST]
+
++ Request
+   + Headers
+      Authorization: Bearer <token>
+
++ Response 200 (application/json)
+   {
+      message: '<success message>',
+      data: null,
+      code: 200
+   }
